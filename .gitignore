@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Local auth state
+.token.json
+
+# Build output
+dist/
+*.mcpb
+
+# Claude Code local settings
+.claude/
+
+# Secrets
+auth.txt
+*.key.txt
+.env
+
+# Company-specific skill (keep in your workspace, not the repo)
+skill.md

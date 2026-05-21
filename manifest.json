@@ -1,0 +1,101 @@
+{
+  "manifest_version": "0.1",
+  "name": "clientsuccess-mcp",
+  "display_name": "ClientSuccess",
+  "version": "2.0.2",
+  "description": "MCP server for the ClientSuccess customer success platform. 8 consolidated tools for managing clients, contacts, health scores, interactions, tasks, contracts, renewals, and portfolio intelligence.",
+  "icon": "icon.png",
+  "author": {
+    "name": "Alec McLeod",
+    "url": "https://github.com/aosmcleod"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/index.js"
+      ],
+      "env": {
+        "CS_USERNAME": "${user_config.cs_username}",
+        "CS_PASSWORD": "${user_config.cs_password}",
+        "CS_LOG_LEVEL": "warn",
+        "CS_SEGMENT_FIELD": "${user_config.cs_segment_field}",
+        "CS_SEGMENT_VALUES": "${user_config.cs_segment_values}",
+        "CS_RENEWAL_DATE_FIELD": "${user_config.cs_renewal_date_field}"
+      }
+    }
+  },
+  "user_config": {
+    "cs_username": {
+      "type": "string",
+      "title": "ClientSuccess Username",
+      "description": "Your ClientSuccess login email address",
+      "sensitive": false,
+      "required": true
+    },
+    "cs_password": {
+      "type": "string",
+      "title": "ClientSuccess Password",
+      "description": "Your ClientSuccess password (used to obtain an API access token)",
+      "sensitive": true,
+      "required": true
+    },
+    "cs_segment_field": {
+      "type": "string",
+      "title": "Segment Field (optional)",
+      "description": "Custom field key used to segment clients into groups (e.g. 'system__cs'). Enables the segment_filter parameter on list/analysis tools.",
+      "sensitive": false,
+      "required": false
+    },
+    "cs_segment_values": {
+      "type": "string",
+      "title": "Segment Values (optional)",
+      "description": "JSON mapping of segment names to field values. E.g. {\"ProductA\": \"\", \"ProductB\": \"productb\"}. Empty string means 'field is null/empty'.",
+      "sensitive": false,
+      "required": false
+    },
+    "cs_renewal_date_field": {
+      "type": "string",
+      "title": "Renewal Date Field (optional)",
+      "description": "Custom field key that holds the client renewal date (e.g. 'Next_Renewal_Date__cs'). Required for the renewals list tool.",
+      "sensitive": false,
+      "required": false
+    }
+  },
+  "tools": [
+    {
+      "name": "list_data",
+      "description": "List/search clients, contacts, interactions, tasks, renewals, and products with filters and concise/detailed modes"
+    },
+    {
+      "name": "get_data",
+      "description": "Get full details for a client, contact, interaction, task, contracts, success score, or pulse history by ID"
+    },
+    {
+      "name": "create_data",
+      "description": "Create contacts, tasks, interactions (notes/calls/meetings/emails), or pulse entries"
+    },
+    {
+      "name": "update_data",
+      "description": "Update clients, contacts, tasks, or interactions. Complete tasks."
+    },
+    {
+      "name": "delete_data",
+      "description": "Delete interactions (irreversible)"
+    },
+    {
+      "name": "analyze_portfolio",
+      "description": "Portfolio intelligence: executive summary, health distribution, CSM book, at-risk clients, neglected accounts, churn, missing team tasks"
+    },
+    {
+      "name": "analyze_client",
+      "description": "Client-level analysis: full 360° view with contacts, interactions, contracts, and pulse history"
+    },
+    {
+      "name": "lookup_reference",
+      "description": "Look up statuses, segments, employees, custom field definitions, and interaction types"
+    }
+  ]
+}

@@ -72,7 +72,7 @@ export interface CSClientConfig {
   /**
    * Optional: custom field key used to segment clients into groups/products.
    * When set, the `segment_filter` parameter becomes available on list/analysis tools.
-   * Example: "system__cs" (Function Software uses this to separate FP and FF clients)
+   * Example: "system__cs"
    */
   segmentField?: string;
 

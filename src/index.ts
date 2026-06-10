@@ -66,7 +66,7 @@ const csClient = new CSClient(config);
 
 const server = new McpServer({
   name: 'clientsuccess-mcp',
-  version: '2.0.2',
+  version: '2.0.3',
 });
 
 // ── JSON Schema → Zod conversion (for MCP SDK) ─────────────────────────────
@@ -184,7 +184,22 @@ async function main() {
   await server.connect(transport);
   logger.info('server_connected');
 
-  // Warm the client list cache in the background
+  // Verify credentials at startup so auth problems surface immediately and
+  // visibly, instead of staying silent until the first tool call. Logged at
+  // error level so it shows regardless of CS_LOG_LEVEL. The server stays up
+  // either way — tool calls will return a clear auth error if this failed.
+  const authError = await csClient.verifyAuth();
+  if (authError) {
+    logger.error('startup_auth_failed', {
+      detail: authError,
+      hint: 'Verify CS_USERNAME and CS_PASSWORD. If the password contains special characters (e.g. $ or &), they may be corrupted by config substitution — try a password without them.',
+    });
+    return;
+  }
+
+  logger.info('startup_auth_ok');
+
+  // Warm the client list cache in the background (reuses the startup token)
   csClient.getV1('/clients').catch((e: Error) =>
     logger.warn('cache_warm_failed', { error: e.message }),
   );

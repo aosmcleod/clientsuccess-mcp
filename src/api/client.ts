@@ -102,6 +102,19 @@ export class CSClient {
     return token;
   }
 
+  /**
+   * Verify credentials at startup. Returns null on success, or a human-readable
+   * error message on failure. Reuses the obtained token for subsequent requests.
+   */
+  async verifyAuth(): Promise<string | null> {
+    try {
+      await this.login();
+      return null;
+    } catch (e: any) {
+      return e?.message ?? 'Unknown authentication error';
+    }
+  }
+
   private async getToken(): Promise<string> {
     if (this.token && this.tokenExpiresAt > Date.now() + TOKEN_EXPIRY_BUFFER_MS) {
       return this.token;

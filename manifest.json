@@ -2,7 +2,7 @@
   "manifest_version": "0.1",
   "name": "clientsuccess-mcp",
   "display_name": "ClientSuccess",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "MCP server for the ClientSuccess customer success platform. 8 consolidated tools for managing clients, contacts, health scores, interactions, tasks, contracts, renewals, and portfolio intelligence.",
   "icon": "icon.png",
   "author": {

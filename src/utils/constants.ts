@@ -30,24 +30,36 @@ export const STATUS_CODE_TO_V2: Record<string, string> = {
 
 // ── Pulse / disposition ─────────────────────────────────────────────────────
 
+// Display labels. Superset of the create enum plus legacy values that older
+// pulses may still return on read (the create and read enums diverge — see
+// DISPOSITION_TYPES below).
 export const DISPOSITION_LABELS: Record<string, string> = {
+  EXTREMELY_SATISFIED: 'Extremely Satisfied',
   VERY_SATISFIED: 'Very Satisfied',
   FAIRLY_SATISFIED: 'Fairly Satisfied',
+  SOME_RISK: 'Some Risk',
+  HIGH_RISK: 'High Risk',
+  SEVERE_RISK: 'Severe Risk',
+  // Legacy / read-only labels — not valid for create.
   NEUTRAL: 'Neutral',
   FAIRLY_DISSATISFIED: 'Fairly Dissatisfied',
   VERY_DISSATISFIED: 'Very Dissatisfied',
-  HIGH_RISK: 'High Risk',
   AT_RISK: 'At Risk',
   LOW_RISK: 'Low Risk',
   NO_SCORE: 'No Score',
 };
 
+// Valid dispositionType values accepted by POST /pulse. Confirmed against the
+// live API: the create endpoint rejects any other value (including the
+// read-side labels NEUTRAL/FAIRLY_DISSATISFIED/VERY_DISSATISFIED) at JSON
+// deserialization with a 400 "Unable to parse request body".
 export const DISPOSITION_TYPES = [
+  'EXTREMELY_SATISFIED',
   'VERY_SATISFIED',
   'FAIRLY_SATISFIED',
-  'NEUTRAL',
-  'FAIRLY_DISSATISFIED',
-  'VERY_DISSATISFIED',
+  'SOME_RISK',
+  'HIGH_RISK',
+  'SEVERE_RISK',
 ] as const;
 
 // ── Interaction types ───────────────────────────────────────────────────────

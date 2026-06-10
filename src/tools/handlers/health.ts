@@ -4,8 +4,8 @@
 
 import type { CSClient } from '../../api/client';
 import { toolResult, dispositionLabel, bandLabel, daysSince } from '../../utils/format';
-import { requireFields } from '../../utils/errors';
-import { DISPOSITION_LABELS } from '../../utils/constants';
+import { requireFields, ValidationError } from '../../utils/errors';
+import { DISPOSITION_LABELS, DISPOSITION_TYPES } from '../../utils/constants';
 
 export async function getSuccessScore(client: CSClient, args: any) {
   requireFields('success_score', args, ['clientId']);
@@ -62,6 +62,16 @@ export async function getPulseHistory(client: CSClient, args: any) {
 
 export async function createPulse(client: CSClient, args: any) {
   requireFields('pulse', args, ['clientId', 'dispositionType']);
+
+  // The create endpoint accepts a different enum than the read side returns.
+  // Reject invalid values here with a clear message — otherwise the API fails
+  // them at JSON deserialization with an opaque 400 "Unable to parse request body".
+  if (!(DISPOSITION_TYPES as readonly string[]).includes(args.dispositionType)) {
+    throw new ValidationError(
+      `Invalid dispositionType "${args.dispositionType}" for pulse. ` +
+      `Valid values: ${DISPOSITION_TYPES.join(', ')}.`,
+    );
+  }
 
   const body: any = {
     clientId: args.clientId,

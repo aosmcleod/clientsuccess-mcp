@@ -5,7 +5,7 @@
 import type { CSClient } from '../../api/client';
 import { toolResult, dispositionLabel, bandLabel, daysSince } from '../../utils/format';
 import { requireFields, ValidationError } from '../../utils/errors';
-import { DISPOSITION_LABELS, DISPOSITION_TYPES } from '../../utils/constants';
+import { DISPOSITION_LABELS, DISPOSITION_TYPES, DISPOSITION_IDS } from '../../utils/constants';
 
 export async function getSuccessScore(client: CSClient, args: any) {
   requireFields('success_score', args, ['clientId']);
@@ -73,11 +73,14 @@ export async function createPulse(client: CSClient, args: any) {
     );
   }
 
+  // Body matches the ClientDispositionActivityDto schema: flat clientId, the
+  // dispositionType enum, and its numeric dispositionId. (reasonCodes is NOT a
+  // field on the create DTO, so it is intentionally not sent.)
   const body: any = {
     clientId: args.clientId,
     dispositionType: args.dispositionType,
+    dispositionId: DISPOSITION_IDS[args.dispositionType],
     ...(args.note && { note: args.note }),
-    ...(args.reasonCodes?.length && { reasonCodes: args.reasonCodes }),
   };
 
   const data = await client.postV2('/pulse', body);

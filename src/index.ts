@@ -66,7 +66,7 @@ const csClient = new CSClient(config);
 
 const server = new McpServer({
   name: 'clientsuccess-mcp',
-  version: '2.0.4',
+  version: '2.0.5',
 });
 
 // ── JSON Schema → Zod conversion (for MCP SDK) ─────────────────────────────

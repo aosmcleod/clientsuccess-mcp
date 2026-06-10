@@ -28,7 +28,7 @@ Data types and fields:
 • contact — clientId*, firstName*, lastName*, email*, title, phone, executiveSponsor, champion, keyContact
 • task — name*, assigneeId* (employee ID), clientId, dueDate (YYYY-MM-DD), description, priority (HIGH/MEDIUM/LOW), status (NOT_STARTED/IN_PROGRESS/COMPLETE)
 • interaction — clientId*, type* (NOTE/CALL/MEETING/EMAIL/QBR/CHAT/SUPPORT_TICKET/OTHER), subject*, note, interactionDate (YYYY-MM-DD), contactIds
-• pulse — clientId*, dispositionType* (EXTREMELY_SATISFIED/VERY_SATISFIED/FAIRLY_SATISFIED/SOME_RISK/HIGH_RISK/SEVERE_RISK), note, reasonCodes
+• pulse — clientId*, dispositionType* (EXTREMELY_SATISFIED/VERY_SATISFIED/FAIRLY_SATISFIED/SOME_RISK/HIGH_RISK/SEVERE_RISK), note
 
 Fields marked * are required.`,
       inputSchema: {
@@ -59,7 +59,6 @@ Fields marked * are required.`,
           contactIds: { type: 'array', description: 'Contact IDs involved' },
           // Pulse fields
           dispositionType: { type: 'string', description: 'Pulse disposition (satisfied → at-risk scale): EXTREMELY_SATISFIED, VERY_SATISFIED, FAIRLY_SATISFIED, SOME_RISK, HIGH_RISK, SEVERE_RISK' },
-          reasonCodes: { type: 'array', description: 'Pulse reason codes' },
         },
         required: ['data_type'],
       },

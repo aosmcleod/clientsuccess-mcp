@@ -163,7 +163,20 @@ export class CSClient {
         }
         throw new ApiError('timeout', `Request timed out after ${DEFAULT_TIMEOUT_MS / 1000}s: ${method} ${url}`, 408);
       }
-      throw e;
+      // Connection-level failures (ECONNRESET, socket hang up, fetch failed) —
+      // often seen when a ClientSuccess backend is cycling during maintenance.
+      // Retry with backoff, then surface a clean, actionable message.
+      if (attempt < MAX_RETRIES) {
+        const delay = RETRY_BASE_MS * Math.pow(2, attempt - 1);
+        logger.warn('api_connection_retry', { method, url, attempt, delay_ms: delay, error: e?.code ?? e?.message });
+        await sleep(delay);
+        return this.request<T>(method, url, body, attempt + 1);
+      }
+      throw new ApiError(
+        'unavailable',
+        'Unable to reach ClientSuccess (connection reset). The service may be undergoing maintenance — please retry in a few minutes.',
+        503,
+      );
     }
     clearTimeout(timer);
 
@@ -190,6 +203,17 @@ export class CSClient {
 
     if (!res.ok) {
       const text = await res.text().catch(() => '');
+      // ClientSuccess serves a static HTML "System Maintenance" page (not a JSON
+      // error) when a backend service is down for maintenance/upgrade. Detect it
+      // and return a clear message instead of leaking the HTML app-shell.
+      const looksHtml = (res.headers.get('content-type') ?? '').includes('html') || text.trimStart().startsWith('<');
+      if (looksHtml || text.includes('System Maintenance')) {
+        throw new ApiError(
+          'unavailable',
+          `ClientSuccess is temporarily unavailable for ${method} ${path} (system maintenance in progress on this endpoint). Please retry in a few minutes.`,
+          503,
+        );
+      }
       throw new ApiError('api_error', `API ${res.status} ${method} ${path}: ${text.substring(0, 200)}`, res.status);
     }
 

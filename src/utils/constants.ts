@@ -49,10 +49,11 @@ export const DISPOSITION_LABELS: Record<string, string> = {
   NO_SCORE: 'No Score',
 };
 
-// Valid dispositionType values accepted by POST /pulse. Confirmed against the
-// live API: the create endpoint rejects any other value (including the
-// read-side labels NEUTRAL/FAIRLY_DISSATISFIED/VERY_DISSATISFIED) at JSON
-// deserialization with a 400 "Unable to parse request body".
+// Valid dispositionType values accepted by POST /pulse, in best→worst order.
+// Confirmed against the live API's OpenAPI spec (ClientDispositionActivityDto)
+// and live reads: any other value (including the read-side legacy labels
+// NEUTRAL/FAIRLY_DISSATISFIED/VERY_DISSATISFIED) is rejected by the API gateway
+// with a 400 "Unable to parse request body" before reaching the backend.
 export const DISPOSITION_TYPES = [
   'EXTREMELY_SATISFIED',
   'VERY_SATISFIED',
@@ -61,6 +62,18 @@ export const DISPOSITION_TYPES = [
   'HIGH_RISK',
   'SEVERE_RISK',
 ] as const;
+
+// Numeric dispositionId for each type (the tenant's pulse scale, 1=best..6=worst).
+// Confirmed from live pulse records. Sent alongside dispositionType so the create
+// body matches what real pulses carry.
+export const DISPOSITION_IDS: Record<string, number> = {
+  EXTREMELY_SATISFIED: 1,
+  VERY_SATISFIED: 2,
+  FAIRLY_SATISFIED: 3,
+  SOME_RISK: 4,
+  HIGH_RISK: 5,
+  SEVERE_RISK: 6,
+};
 
 // ── Interaction types ───────────────────────────────────────────────────────
 

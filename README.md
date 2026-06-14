@@ -1,9 +1,7 @@
 # ClientSuccess MCP Server
 
 > [!IMPORTANT]
-> ClientSuccess has communicated that they will be releasing an **official MCP server in 2026**. Accordingly, this repository is **archived** pending their release.
->
-> Keep an eye on official ClientSuccess channels for news and availability details from them directly.
+> ClientSuccess has communicated to me that they will be releasing an **official MCP server in 2026**. Accordingly, this repository is **archived** pending their release. Keep an eye on official ClientSuccess channels for news and availability details from them directly.
 
 
 An [MCP](https://modelcontextprotocol.io/) server for [ClientSuccess](https://www.clientsuccess.com/) — the customer success platform. Provides AI assistants with read, write, and analysis tools covering your full ClientSuccess portfolio.
